@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 class QuizViewModel: ObservableObject {
+    
     @Published var questions: [Question] = []
     @Published var currentQuestionIndex = 0
     @Published var selectedAnswer: Int? = nil

@@ -10,10 +10,12 @@
 		92AB41042E8BEE4F009D9932 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 92AB41032E8BEE4F009D9932 /* FirebaseAuth */; };
 		92AB41062E8BEE4F009D9932 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 92AB41052E8BEE4F009D9932 /* FirebaseCore */; };
 		92AB41082E8BEE4F009D9932 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 92AB41072E8BEE4F009D9932 /* FirebaseFirestore */; };
+		92AB411E2E8C113F009D9932 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 92AB411D2E8C113F009D9932 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		92AB40F32E8BEB36009D9932 /* Real Madrid fan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Real Madrid fan.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		92AB411D2E8C113F009D9932 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -41,6 +43,7 @@
 		92AB40EA2E8BEB36009D9932 = {
 			isa = PBXGroup;
 			children = (
+				92AB411D2E8C113F009D9932 /* GoogleService-Info.plist */,
 				92AB40F52E8BEB36009D9932 /* Real Madrid fan */,
 				92AB40F42E8BEB36009D9932 /* Products */,
 			);
@@ -124,6 +127,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92AB411E2E8C113F009D9932 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

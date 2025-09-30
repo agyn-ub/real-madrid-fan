@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var authManager: AuthenticationManager
     @State private var showQuiz = false
+    @State private var showProfile = false
+    @State private var showAuthentication = false
     
     var body: some View {
         NavigationStack {
@@ -24,6 +27,36 @@ struct ContentView: View {
                 .ignoresSafeArea()
                 
                 VStack(spacing: 40) {
+                    HStack {
+                        Spacer()
+                        
+                        Button(action: {
+                            if authManager.isAuthenticated {
+                                showProfile = true
+                            } else {
+                                showAuthentication = true
+                            }
+                        }) {
+                            if authManager.isAuthenticated {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.white.opacity(0.2))
+                                        .frame(width: 40, height: 40)
+                                    
+                                    Text(authManager.user?.initials ?? "RM")
+                                        .font(.system(size: 16, weight: .bold))
+                                        .foregroundColor(.white)
+                                }
+                            } else {
+                                Image(systemName: "person.circle")
+                                    .font(.system(size: 30))
+                                    .foregroundColor(.white)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 20)
+                    
                     VStack(spacing: 20) {
                         Image(systemName: "sportscourt.fill")
                             .font(.system(size: 80))
@@ -39,9 +72,15 @@ struct ContentView: View {
                     }
                     
                     VStack(spacing: 15) {
-                        Text("Test your knowledge about")
-                            .font(.body)
-                            .foregroundColor(.white.opacity(0.9))
+                        if let user = authManager.user {
+                            Text("Welcome back, \(user.displayNameOrEmail)!")
+                                .font(.body)
+                                .foregroundColor(.white.opacity(0.9))
+                        } else {
+                            Text("Test your knowledge about")
+                                .font(.body)
+                                .foregroundColor(.white.opacity(0.9))
+                        }
                         
                         Text("Los Blancos")
                             .font(.title2)
@@ -90,10 +129,18 @@ struct ContentView: View {
                         .foregroundColor(.white.opacity(0.8))
                         .padding(.bottom, 30)
                 }
-                .padding(.top, 60)
+                .padding(.top, authManager.isAuthenticated ? 0 : 60)
             }
             .fullScreenCover(isPresented: $showQuiz) {
                 QuizView()
+            }
+            .fullScreenCover(isPresented: $showProfile) {
+                ProfileView()
+                    .environmentObject(authManager)
+            }
+            .fullScreenCover(isPresented: $showAuthentication) {
+                AuthenticationView()
+                    .environmentObject(authManager)
             }
         }
     }
