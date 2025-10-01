@@ -9,6 +9,8 @@ import SwiftUI
 
 struct QuizView: View {
     @StateObject private var viewModel = QuizViewModel()
+    @Environment(\.dismiss) var dismiss
+    @State private var showingQuitAlert = false
     
     var body: some View {
         NavigationStack {
@@ -92,6 +94,32 @@ struct QuizView: View {
             }
             .navigationTitle("Real Madrid Quiz")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if !viewModel.showingResults {
+                        Button(action: {
+                            showingQuitAlert = true
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "rectangle.portrait.and.arrow.right")
+                                    .font(.caption)
+                                Text("Quit")
+                                    .font(.callout)
+                                    .fontWeight(.medium)
+                            }
+                            .foregroundColor(.red)
+                        }
+                    }
+                }
+            }
+            .alert("Quit Game", isPresented: $showingQuitAlert) {
+                Button("Continue Playing", role: .cancel) {}
+                Button("Quit", role: .destructive) {
+                    dismiss()
+                }
+            } message: {
+                Text("Are you sure you want to quit? Your progress will be lost.")
+            }
         }
     }
 }

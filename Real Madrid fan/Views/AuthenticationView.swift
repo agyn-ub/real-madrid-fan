@@ -10,6 +10,7 @@ import AuthenticationServices
 
 struct AuthenticationView: View {
     @EnvironmentObject var authManager: AuthenticationManager
+    @Environment(\.dismiss) var dismiss
     @State private var isSigningIn = false
     
     var body: some View {
@@ -25,6 +26,19 @@ struct AuthenticationView: View {
             .ignoresSafeArea()
             
             VStack(spacing: 40) {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title)
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top, 20)
+                
                 VStack(spacing: 30) {
                     Image(systemName: "crown.fill")
                         .font(.system(size: 80))
@@ -46,7 +60,7 @@ struct AuthenticationView: View {
                             .foregroundColor(Color(red: 1.0, green: 0.84, blue: 0.0))
                     }
                     
-                    Text("Sign in to track your scores and compete with other Madridistas worldwide")
+                    Text("Sign in to play the quiz and test your Real Madrid knowledge")
                         .font(.body)
                         .multilineTextAlignment(.center)
                         .foregroundColor(.white.opacity(0.8))
@@ -62,38 +76,27 @@ struct AuthenticationView: View {
                             .scaleEffect(1.5)
                             .padding()
                     } else {
-                        SignInWithAppleButton(
-                            .signIn,
-                            onRequest: { request in
-                                request.requestedScopes = [.fullName, .email]
-                            },
-                            onCompletion: { result in
-                                switch result {
-                                case .success:
-                                    isSigningIn = true
-                                    Task {
-                                        await authManager.signInWithApple()
-                                        isSigningIn = false
-                                    }
-                                case .failure(let error):
-                                    print("Sign in with Apple failed: \(error)")
-                                    isSigningIn = false
-                                }
+                        Button(action: {
+                            isSigningIn = true
+                            Task {
+                                await authManager.signInWithApple()
+                                isSigningIn = false
                             }
-                        )
-                        .signInWithAppleButtonStyle(.white)
-                        .frame(height: 55)
-                        .cornerRadius(12)
-                        .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
-                        .padding(.horizontal, 40)
-                        
-                        Button(action: {}) {
-                            Text("Continue as Guest")
-                                .font(.headline)
-                                .foregroundColor(.white.opacity(0.9))
-                                .underline()
+                        }) {
+                            HStack {
+                                Image(systemName: "applelogo")
+                                    .font(.title2)
+                                Text("Sign in with Apple")
+                                    .font(.headline)
+                            }
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 55)
+                            .background(Color.white)
+                            .cornerRadius(12)
+                            .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
                         }
-                        .padding(.bottom)
+                        .padding(.horizontal, 40)
                     }
                     
                     if let errorMessage = authManager.errorMessage {
@@ -116,7 +119,11 @@ struct AuthenticationView: View {
                 }
                 .padding(.bottom, 30)
             }
-            .padding(.top, 60)
+        }
+        .onReceive(authManager.$isAuthenticated) { isAuthenticated in
+            if isAuthenticated {
+                dismiss()
+            }
         }
     }
 }

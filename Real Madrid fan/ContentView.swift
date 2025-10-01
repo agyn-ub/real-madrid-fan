@@ -97,12 +97,16 @@ struct ContentView: View {
                     Spacer()
                     
                     Button(action: {
-                        showQuiz = true
+                        if authManager.isAuthenticated {
+                            showQuiz = true
+                        } else {
+                            showAuthentication = true
+                        }
                     }) {
                         HStack {
-                            Image(systemName: "play.fill")
+                            Image(systemName: authManager.isAuthenticated ? "play.fill" : "lock.fill")
                                 .font(.title2)
-                            Text("Start Quiz")
+                            Text(authManager.isAuthenticated ? "Start Quiz" : "Sign In to Play")
                                 .font(.title2)
                                 .fontWeight(.semibold)
                         }
@@ -111,9 +115,12 @@ struct ContentView: View {
                         .padding(.vertical, 18)
                         .background(
                             LinearGradient(
-                                gradient: Gradient(colors: [
+                                gradient: Gradient(colors: authManager.isAuthenticated ? [
                                     Color(red: 1.0, green: 0.84, blue: 0.0),
                                     Color(red: 0.95, green: 0.7, blue: 0.0)
+                                ] : [
+                                    Color.gray.opacity(0.8),
+                                    Color.gray.opacity(0.6)
                                 ]),
                                 startPoint: .leading,
                                 endPoint: .trailing
